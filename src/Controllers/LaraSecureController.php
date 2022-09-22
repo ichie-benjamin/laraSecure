@@ -1,37 +1,56 @@
 <?php
 
+
 namespace Ogbuechi\LaraSecure\Controllers;
+
+use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\Http;
 
 use Illuminate\Http\Request;
 
-class LaraSecureController
+class LaraSecureController extends Controller
 {
 
 
 
-    public function dxxss()
+    public function dxxss(Request $request)
     {
-        return [
-            base64_decode('YWN0aXZl') => 1
-        ];
         if (self::is_local()) {
-            return [
-                base64_decode('YWN0aXZl') => 1
-            ];
+            session()->put(base64_decode('cHVyY2hhc2Vfa2V5'), $request[base64_decode('cHVyY2hhc2Vfa2V5')]);//pk
+            session()->put(base64_decode('dXNlcm5hbWU='), $request[base64_decode('dXNlcm5hbWU=')]);//un
+            return redirect()->route(base64_decode('c3RlcDM='));//s3
         } else {
-            try {
-                $remove = array("http://", "https://", "www.");
-                $url = str_replace($remove, "", url('/'));
-                return Http::get(base64_decode('aHR0cHM6Ly9iYXNlLndlYnRyYWRlci5wbHVzL2NoZWNrLWRvbWFpbg=='),
-                    array(base64_decode('dXJs') => $url));
-            } catch (\Exception $exception) {
-                return [
-                    base64_decode('YWN0aXZl') => 1
-                ];
-            }
+            $remove = array("http://","https://","www.");
+            $url= str_replace($remove,"",url('/'));
 
+            $post = [
+                base64_decode('dXNlcm5hbWU=') => $request[base64_decode('dXNlcm5hbWU=')],//un
+                base64_decode('cHVyY2hhc2Vfa2V5') => $request[base64_decode('cHVyY2hhc2Vfa2V5')],//pk
+                base64_decode('c29mdHdhcmVfaWQ=') => base64_decode(env(base64_decode('U09GVFdBUkVfSUQ='))),//sid
+                base64_decode('ZG9tYWlu') => $url
+            ];
+
+            try {
+                $ch = curl_init(base64_decode('aHR0cHM6Ly9jaGVjay42YW10ZWNoLmNvbS9hcGkvdjEvZG9tYWluLWNoZWNr'));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+                $response = curl_exec($ch);
+                //$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
+
+                if (isset(json_decode($response, true)['active']) && base64_decode(json_decode($response, true)['active'])) {
+                    session()->put(base64_decode('cHVyY2hhc2Vfa2V5'), $request[base64_decode('cHVyY2hhc2Vfa2V5')]);//pk
+                    session()->put(base64_decode('dXNlcm5hbWU='), $request[base64_decode('dXNlcm5hbWU=')]);//un
+                    return redirect()->route(base64_decode('c3RlcDM='));//s3
+                } else {
+                    return redirect(base64_decode('aHR0cHM6Ly82YW10ZWNoLmNvbS9zb2Z0d2FyZS1hY3RpdmF0aW9u'));
+                }
+            } catch (\Exception $exception) {
+                session()->put(base64_decode('cHVyY2hhc2Vfa2V5'), $request[base64_decode('cHVyY2hhc2Vfa2V5')]);//pk
+                session()->put(base64_decode('dXNlcm5hbWU='), $request[base64_decode('dXNlcm5hbWU=')]);//un
+                return redirect()->route(base64_decode('c3RlcDM='));//s3
+            }
         }
     }
 

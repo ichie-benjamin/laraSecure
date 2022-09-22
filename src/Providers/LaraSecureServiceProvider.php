@@ -3,6 +3,8 @@
 
 namespace Ogbuechi\LaraSecure\Providers;
 
+use Illuminate\Support\ServiceProvider;
+
 class LaraSecureServiceProvider extends ServiceProvider
 {
 
