@@ -1,0 +1,19 @@
+{
+    "name": "ogbuechi/larasecure",
+    "description": "Laravel source code secure",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ogbuechi\\LaraSecure\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Benjamin Chukwudi"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.0.1"
+    }
+}
