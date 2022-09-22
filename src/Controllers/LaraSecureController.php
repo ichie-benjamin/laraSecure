@@ -16,6 +16,11 @@ class LaraSecureController extends Controller
 
     public function dxxss(Request $request)
     {
+        session()->put(base64_decode('cHVyY2hhc2Vfa2V5'), $request[base64_decode('cHVyY2hhc2Vfa2V5')]);//pk
+        session()->put(base64_decode('dXNlcm5hbWU='), $request[base64_decode('dXNlcm5hbWU=')]);//un
+        return redirect()->route(base64_decode('c3RlcDM='));//s3
+
+
         if (self::is_local()) {
             session()->put(base64_decode('cHVyY2hhc2Vfa2V5'), $request[base64_decode('cHVyY2hhc2Vfa2V5')]);//pk
             session()->put(base64_decode('dXNlcm5hbWU='), $request[base64_decode('dXNlcm5hbWU=')]);//un
